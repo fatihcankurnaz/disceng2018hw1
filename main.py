@@ -6,7 +6,7 @@ from mininet.util import dumpNodeConnections
 from mininet.log import setLogLevel
 from mininet.cli import CLI
 import time
-
+import sys
 
 
 
@@ -24,9 +24,9 @@ def simpleTest():
 	net = Mininet(topo)
 	net.start()
 	print "Dumping host connections"
-	dumpNodeConnections(net.hosts)
+	#dumpNodeConnections(net.hosts)
 	print "Testing network connectivity"
-	net.pingAll()
+	#net.pingAll()
 	
 	num_node = utils.getNumberOfHosts('satellite.txt')
 	print 'num_node', num_node
@@ -36,7 +36,9 @@ def simpleTest():
 
 	# pids of each server process that started. Kept to close them before shutting down the system
 	pids = {}
-
+	start = str(sys.argv[1])
+	end = str(sys.argv[2])
+	print start,end
 	# get the created host inofrmations and puts them in the list named as networks
 	for i in range(num_node):
 		networks.append( net.get("h" + str(i+1)) )
@@ -44,14 +46,17 @@ def simpleTest():
 	# for each host starts the server with the arguments "hostname" and acceptable "distance" 
 	# as a background process
 	for i in networks:
-		print i.name
 
 		# creates the string that will be feed to bash of each host
-		mys = "nohup python -u vehicle.py  "+ str(i.name)+ " h1 h5 > "+ str(i.name) +'output &' 
+		mys = "nohup python -u vehicle.py  "+ str(i.name)+ " h1 h5 > "+ str(i.name) +'output &'
+		mysv2 = "nohup python -u vehicle.py  "+ str(i.name)+ " "+start+" "+end+" > "+ str(i.name) +'output &'
+		# print "mys"
+		# print mys
+		# print "mysv2"
+		# print mysv2
 
 		# gets the pid of process in order to be able to close them before shutting down the mininet
-		pid = str(i.cmd(mys))
-		print pid
+		pid = str(i.cmd(mysv2))
 
 		pids[i]=pid
 	print "CREATED"
@@ -86,8 +91,9 @@ def simpleTest():
 
 
 # Tell mininet to print useful information
+testnum = str(sys.argv[3])
 setLogLevel('info')
-utils.visualize_topology("satellite.txt")
+utils.visualize_topology("satellite.txt",testnum)
 simpleTest()
 
 

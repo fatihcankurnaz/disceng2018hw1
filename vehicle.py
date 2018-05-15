@@ -154,6 +154,9 @@ class Vehicle():
 				print my_x, my_y, d_x, d_y
 				if(my_x == d_x and my_y==d_y):
 					print "--- Packet reached the target."
+					curtime = time.time()
+					print curtime
+					print("end-to-end time is : %f" %(curtime- float(args[1].split(",")[-1] )) ) 
 					break
 
 				self.routeMessage(message)				
@@ -190,7 +193,8 @@ if __name__ == '__main__':
 		print "This is start node of routing."
 		destination_coords = utils.getCoordinate(destination_node, 'satellite.txt')
 		
-		v.routeMessage( 'M|' + destination_node + ','+str(destination_coords[0])+','+str(destination_coords[1])+'|')
+		v.routeMessage( 'M|' + destination_node + ','+str(destination_coords[0])+','+str(destination_coords[1])+","+str(time.time())+'|')
+		print time.time()
 
 	print v.activateRouting()
 

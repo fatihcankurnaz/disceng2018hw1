@@ -1,7 +1,8 @@
 import math
+import os
 
 
-def visualize_topology(satellite_name):
+def visualize_topology(satellite_name,testnum):
 
 	import numpy as np
 	import cv2
@@ -10,11 +11,12 @@ def visualize_topology(satellite_name):
 	from random import randint
 
 	counter = 1
+	thres = getThreshold(satellite_name)
 	for (x,y) in getCoordinateOfHosts(satellite_name):
 		print x,y
 		overlay =  np.ones((1000,1000,3), np.uint8)*255
 
-		cv2.circle(blank_image,(int(x),int(y)), 100, (randint(0,255),randint(0,255),randint(0,255)),lineType=8, thickness=1)
+		cv2.circle(blank_image,(int(x),int(y)), thres, (randint(0,255),randint(0,255),randint(0,255)),lineType=8, thickness=1)
 	
 
 		#font = cv2.FONT_HERSHEY_SIMPLEX
@@ -30,9 +32,11 @@ def visualize_topology(satellite_name):
 		cv2.putText(out,'h'+str(counter),(int(x),int(y)), font,  1,(0,0,0),2,1)
 		cv2.circle(out,(int(x),int(y)), 3, (0,0,255), -1)
 		counter += 1
+	#cv2.imshow('Topology', out)
+	#cv2.waitKey(5000)
+	#cv2.destroyAllWindows()
+	cv2.imwrite(testnum+'topology.png', out)
 
-	cv2.imshow('Topology', out)
-	cv2.imwrite('topology.png', out)
 
 
 
